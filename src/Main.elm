@@ -12,17 +12,6 @@ import System exposing (..)
 import Time exposing (fps,Time)
 import Signal exposing ((<~))
 
-initialModel : Model
-initialModel =
-  {position = {x = canvasSize.width * 0.5
-              ,y = canvasSize.height * 0.2}
-  ,momentum = { dx = 0, dy = 0}
-  ,fuel = 30
-  ,score = 0}
-
-init : (Model, Effects Action)
-init = (initialModel, none)
-
 ------------------------------------------------------------
 
 instructions : String
@@ -66,7 +55,7 @@ update action model =
 ------------------------------------------------------------
 
 app : App Model
-app = StartApp.start {init = init
+app = StartApp.start {init = (initialModel, none)
                      ,view = rootView
                      ,update = update
                      ,inputs = [Tick <~ fps 25
