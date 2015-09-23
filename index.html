@@ -4434,31 +4434,6 @@ Elm.Main.make = function (_elm) {
    $System = Elm.System.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm);
-   var instructions = "\nLand the ship slowly and safely at the bottom of the screen to earn a point.\n\nUse the W, A, S, D  keys to thrust your ship, but don\'t run out of fuel!\n";
-   var rootView = F2(function (channel,
-   model) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
-                                                         ,_0: "text-align"
-                                                         ,_1: "center"}]))]),
-      _L.fromArray([A2($Html.h1,
-                   _L.fromArray([]),
-                   _L.fromArray([$Html.text("Lunar Lander")]))
-                   ,A2($Html.p,
-                   _L.fromArray([]),
-                   _L.fromArray([$Html.text(instructions)]))
-                   ,$GameView.root(model)]));
-   });
-   var initialModel = {_: {}
-                      ,fuel: 30
-                      ,momentum: {_: {},dx: 0,dy: 0}
-                      ,position: {_: {}
-                                 ,x: $System.canvasSize.width * 0.5
-                                 ,y: $System.canvasSize.height * 0.2}
-                      ,score: 0};
-   var init = {ctor: "_Tuple2"
-              ,_0: initialModel
-              ,_1: $Effects.none};
    var update = F2(function (action,
    model) {
       return {ctor: "_Tuple2"
@@ -4487,21 +4462,42 @@ Elm.Main.make = function (_elm) {
                         $System.canvasSize.height) > 0 ? _U.replace([["score"
                                                                      ,model.score + (_U.cmp(newMomentum.dy,
                                                                      $System.maxImpactSpeed) < 0 ? 1 : -1)]],
-                        initialModel) : _U.replace([["momentum"
-                                                    ,newMomentum]
-                                                   ,["position",newPosition]],
+                        $System.initialModel) : _U.replace([["momentum"
+                                                            ,newMomentum]
+                                                           ,["position"
+                                                            ,newPosition]],
                         model);
                      }();}
                 _U.badCase($moduleName,
-                "between lines 46 and 64");
+                "between lines 35 and 53");
              }()
              ,_1: $Effects.none};
    });
+   var instructions = "\nLand the ship slowly and safely at the bottom of the screen to earn a point.\n\nUse WASD or the arrow keys to thrust your ship, but don\'t run out of fuel!\n";
+   var rootView = F2(function (channel,
+   model) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                         ,_0: "text-align"
+                                                         ,_1: "center"}]))]),
+      _L.fromArray([A2($Html.h1,
+                   _L.fromArray([]),
+                   _L.fromArray([$Html.text("Lunar Lander")]))
+                   ,A2($Html.p,
+                   _L.fromArray([]),
+                   _L.fromArray([$Html.text(instructions)]))
+                   ,$GameView.root(model)]));
+   });
    var app = $StartApp.start({_: {}
-                             ,init: init
+                             ,init: {ctor: "_Tuple2"
+                                    ,_0: $System.initialModel
+                                    ,_1: $Effects.none}
                              ,inputs: _L.fromArray([A2($Signal._op["<~"],
                                                    $System.Tick,
                                                    $Time.fps(25))
+                                                   ,A2($Signal._op["<~"],
+                                                   $System.Thrust,
+                                                   $Keyboard.arrows)
                                                    ,A2($Signal._op["<~"],
                                                    $System.Thrust,
                                                    $Keyboard.wasd)])
@@ -4511,8 +4507,6 @@ Elm.Main.make = function (_elm) {
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);
    _elm.Main.values = {_op: _op
-                      ,initialModel: initialModel
-                      ,init: init
                       ,instructions: instructions
                       ,rootView: rootView
                       ,update: update
@@ -13808,6 +13802,19 @@ Elm.System.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var maxImpactSpeed = 10;
+   var thrustSize = 3.0;
+   var gravity = 0.3;
+   var canvasSize = {_: {}
+                    ,height: 600
+                    ,width: 800};
+   var initialModel = {_: {}
+                      ,fuel: 30
+                      ,momentum: {_: {},dx: 0,dy: 0}
+                      ,position: {_: {}
+                                 ,x: canvasSize.width * 0.5
+                                 ,y: canvasSize.height * 0.2}
+                      ,score: 0};
    var Model = F4(function (a,
    b,
    c,
@@ -13838,23 +13845,18 @@ Elm.System.make = function (_elm) {
       return {ctor: "Thrust"
              ,_0: a};
    };
-   var maxImpactSpeed = 10;
-   var thrustSize = 3.0;
-   var gravity = 0.3;
-   var canvasSize = {_: {}
-                    ,height: 600
-                    ,width: 800};
    _elm.System.values = {_op: _op
-                        ,canvasSize: canvasSize
-                        ,gravity: gravity
-                        ,thrustSize: thrustSize
-                        ,maxImpactSpeed: maxImpactSpeed
                         ,Thrust: Thrust
                         ,Tick: Tick
                         ,Size: Size
                         ,Position: Position
                         ,Momentum: Momentum
-                        ,Model: Model};
+                        ,Model: Model
+                        ,canvasSize: canvasSize
+                        ,gravity: gravity
+                        ,thrustSize: thrustSize
+                        ,maxImpactSpeed: maxImpactSpeed
+                        ,initialModel: initialModel};
    return _elm.System.values;
 };Elm.Task = Elm.Task || {};
 Elm.Task.make = function (_elm) {
