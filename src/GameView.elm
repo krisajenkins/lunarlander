@@ -10,13 +10,12 @@ root : Model -> Html
 root model =
   svg [width (toString canvasSize.width)
       ,height (toString canvasSize.height)]
-      [rect [key "ship"
-            ,x ((toString model.position.x))
-            ,y ((toString model.position.y))
-            ,width "20px"
-            ,height "20px"
-            ,fill "blue"]
-            []
+      [circle [key "ship"
+              ,cx ((toString model.position.x))
+              ,cy ((toString model.position.y))
+              ,r "20px"
+              ,fill "blue"]
+              []
       ,rect [key "bounds"
             ,x "0"
             ,y "0"

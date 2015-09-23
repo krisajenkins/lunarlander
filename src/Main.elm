@@ -14,6 +14,24 @@ import Time exposing (fps,Time)
 import Signal exposing ((<~))
 import Debug
 
+initialModel : Model
+initialModel =
+  {position = {x = canvasSize.width * 0.5
+              ,y = canvasSize.height * 0.2}
+  ,momentum = { dx = 0, dy = 0}
+  ,fuel = 30
+  ,score = 0}
+
+init : (Model, Effects Action)
+init = (initialModel, none)
+
+------------------------------------------------------------
+
+rootView : Address Action -> Model -> Html
+rootView channel model = GameView.root model
+
+------------------------------------------------------------
+
 update : Action -> Model -> (Model, Effects Action)
 update action model =
   case action of
@@ -37,27 +55,6 @@ update action model =
                               , momentum <- newMomentum}
                       ,none)
                  else (model, none)
-    _ -> (model, none)
-
-initialModel : Model
-initialModel =
-  {position = {x = canvasSize.width * 0.5
-              ,y = canvasSize.height * 0.2}
-  ,momentum = { dx = 0, dy = 0}
-  ,fuel = 30
-  ,score = 0}
-
-init : (Model, Effects Action)
-init = (initialModel, none)
-
-------------------------------------------------------------
-
-rootView : Address Action -> Model -> Html
-rootView channel model =
-  div []
-      [div []
-           [code [] [text (toString model)]]
-      ,GameView.root model]
 
 ------------------------------------------------------------
 

@@ -16,10 +16,7 @@ maxImpactSpeed = 10
 
 type Action
   = Thrust {x : Int, y : Int}
-  | TurnLeft
-  | TurnRight
   | Tick Time
-  | UnknownControl
 
 type alias Size =
   { width : Float
