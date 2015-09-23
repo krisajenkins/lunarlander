@@ -30,9 +30,19 @@ root model =
              ,fill "blueviolet"
              ,Svg.Attributes.style "text-anchor: middle; font-size: 50px"]
              [text (toString model.score)]
+      ,text' [x "50"
+             ,y "80"
+             ,fill "blueviolet"
+             ,Svg.Attributes.style "text-anchor: middle; font-size: 20px"]
+             [text "Score"]
       ,text' [x (toString (canvasSize.width - 50))
              ,y "50"
              ,fill "mauve"
              ,Svg.Attributes.style "text-anchor: middle; font-size: 50px"]
              [text (toString model.fuel)]
+      ,text' [x (toString (canvasSize.width - 50))
+             ,y "80"
+             ,fill "mauve"
+             ,Svg.Attributes.style "text-anchor: middle; font-size: 20px"]
+             [text "Fuel"]
              ]

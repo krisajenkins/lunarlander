@@ -4,6 +4,7 @@ import Keyboard exposing (wasd)
 import StartApp exposing (App)
 import Task exposing (Task)
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Effects exposing (..)
 import Signal exposing (Address)
 import GameView
@@ -24,8 +25,19 @@ init = (initialModel, none)
 
 ------------------------------------------------------------
 
+instructions : String
+instructions = """
+Land the ship slowly and safely at the bottom of the screen to earn a point.
+
+Use the W, A, S, D  keys to thrust your ship, but don't run out of fuel!
+"""
+
 rootView : Address Action -> Model -> Html
-rootView channel model = GameView.root model
+rootView channel model =
+  div [style [("text-align", "center")]]
+      [h1 [] [text "Lunar Lander"]
+      ,p [] [text instructions]
+      ,GameView.root model]
 
 ------------------------------------------------------------
 
