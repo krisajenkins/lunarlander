@@ -1,5 +1,6 @@
 module Main where
 
+import Keyboard exposing (wasd)
 import StartApp exposing (App)
 import Task exposing (Task)
 import Html exposing (..)
@@ -11,6 +12,14 @@ import GameView
 import System exposing (..)
 import Time exposing (fps,Time)
 import Signal exposing ((<~))
+import Debug
+
+controls : {x : Int, y : Int} -> Action
+controls arrows =
+  Debug.log "control" <|
+  if arrows.y == 1
+  then Thrust
+  else UnknownControl
 
 update : Action -> Model -> (Model, Effects Action)
 update action model =
@@ -21,11 +30,20 @@ update action model =
                                 , y = model.position.y + newMomentum.dy }
               in if newPosition.y > canvasSize.height
                  then ({model | momentum <- initialMomentum
-                              , position <- initialPosition}
+                              , position <- initialPosition
+                              , score <- model.score - 1}
                       ,none)
                  else ({model | momentum <- newMomentum
                               , position <- newPosition}
                       ,none)
+
+    Thrust -> let newMomentum = { dx = model.momentum.dx
+                                , dy = model.momentum.dy - thrustSize}
+              in if model.fuel > 0
+                 then ({model | fuel <- model.fuel - 1
+                              , momentum <- newMomentum}
+                      ,none)
+                 else (model, none)
     _ -> (model, none)
 
 initialPosition : Position
@@ -40,7 +58,8 @@ init : (Model, Effects Action)
 init =
   ({position = initialPosition
    ,momentum = initialMomentum
-   ,fuel = 100}
+   ,fuel = 100
+   ,score = 0}
   , none)
 
 ------------------------------------------------------------
@@ -58,7 +77,8 @@ app : App Model
 app = StartApp.start {init = init
                      ,view = rootView
                      ,update = update
-                     ,inputs = [Tick <~ fps 25]}
+                     ,inputs = [Tick <~ fps 25
+                               ,controls <~ wasd]}
 
 main : Signal Html
 main = app.html
