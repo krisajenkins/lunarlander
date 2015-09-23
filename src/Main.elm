@@ -19,16 +19,27 @@ update action model =
                                 , dy = model.momentum.dy + gravity}
                   newPosition = { x = model.position.x + newMomentum.dx
                                 , y = model.position.y + newMomentum.dy }
-              in ({model | momentum <- newMomentum
-                         , position <- newPosition}
-                 ,none)
+              in if newPosition.y > canvasSize.height
+                 then ({model | momentum <- initialMomentum
+                              , position <- initialPosition}
+                      ,none)
+                 else ({model | momentum <- newMomentum
+                              , position <- newPosition}
+                      ,none)
     _ -> (model, none)
+
+initialPosition : Position
+initialPosition =
+  {x = canvasSize.width * 0.5
+  ,y = canvasSize.height * 0.2}
+
+initialMomentum : Momentum
+initialMomentum = { dx = 0, dy = 0}
 
 init : (Model, Effects Action)
 init =
-  ({position = {x = canvasSize.width * 0.5
-               ,y = canvasSize.height * 0.2}
-   ,momentum = { dx = 0, dy = 0}
+  ({position = initialPosition
+   ,momentum = initialMomentum
    ,fuel = 100}
   , none)
 
@@ -37,7 +48,8 @@ init =
 rootView : Address Action -> Model -> Html
 rootView channel model =
   div []
-      [code [] [text (toString model)]
+      [div []
+           [code [] [text (toString model)]]
       ,GameView.root model]
 
 ------------------------------------------------------------

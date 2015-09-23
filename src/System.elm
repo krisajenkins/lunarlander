@@ -6,7 +6,7 @@ canvasSize : Size
 canvasSize = { width = 400, height = 600}
 
 gravity : Float
-gravity = 1
+gravity = 0.3
 
 type Action
   = Thrust
