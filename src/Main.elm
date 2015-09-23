@@ -34,27 +34,25 @@ rootView channel model = GameView.root model
 
 update : Action -> Model -> (Model, Effects Action)
 update action model =
-  case action of
-    Tick t -> let newMomentum = { dx = model.momentum.dx
-                                , dy = model.momentum.dy + gravity}
-                  newPosition = { x = model.position.x + newMomentum.dx
-                                , y = model.position.y + newMomentum.dy }
-              in if newPosition.y > canvasSize.height
-                 then ({initialModel | score <- model.score + (if newMomentum.dy < maxImpactSpeed
+  (case action of
+     Tick t -> let newMomentum = { dx = model.momentum.dx
+                                 , dy = model.momentum.dy + gravity}
+                   newPosition = { x = model.position.x + newMomentum.dx
+                                 , y = model.position.y + newMomentum.dy }
+               in if newPosition.y > canvasSize.height
+                  then {initialModel | score <- model.score + (if newMomentum.dy < maxImpactSpeed
                                                                then 1
                                                                else -1)}
-                      ,none)
-                 else ({model | momentum <- newMomentum
+                  else {model | momentum <- newMomentum
                               , position <- newPosition}
-                      ,none)
 
-    Thrust direction -> let newMomentum = { dx = model.momentum.dx + (toFloat direction.x * thrustSize)
-                                          , dy = model.momentum.dy - (toFloat direction.y * thrustSize)}
-              in if model.fuel > 0
-                 then ({model | fuel <- model.fuel - (abs direction.x + abs direction.y)
+     Thrust direction -> let newMomentum = { dx = model.momentum.dx + (toFloat direction.x * thrustSize)
+                                           , dy = model.momentum.dy - (toFloat direction.y * thrustSize)}
+               in if model.fuel > 0
+                  then {model | fuel <- model.fuel - (abs direction.x + abs direction.y)
                               , momentum <- newMomentum}
-                      ,none)
-                 else (model, none)
+                  else model
+  ,none)
 
 ------------------------------------------------------------
 
