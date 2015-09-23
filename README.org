@@ -1,0 +1,13 @@
+* Lunar Lander in Elm
+
+A Lunar Lander clone.  Written for September 2015's [[http://www.meetup.com/West-London-Hack-Night/][West London Hack Night]].
+
+** [[http://krisajenkins.github.io/lunarlander][Play It Live]]
+
+** Building
+
+#+BEGIN_SRC sh
+elm-make --output=index.html src/Main.elm
+#+END_SRC
+
+...then open =index.html= in a browser.
