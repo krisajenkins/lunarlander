@@ -4,15 +4,12 @@ import Keyboard exposing (wasd)
 import StartApp exposing (App)
 import Task exposing (Task)
 import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import Effects exposing (..)
 import Signal exposing (Address)
 import GameView
 import System exposing (..)
 import Time exposing (fps,Time)
 import Signal exposing ((<~))
-import Debug
 
 initialModel : Model
 initialModel =
