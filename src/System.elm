@@ -11,6 +11,9 @@ gravity = 0.3
 thrustSize : Float
 thrustSize = 5
 
+maxImpactSpeed : Float
+maxImpactSpeed = 10
+
 type Action
   = Thrust
   | TurnLeft

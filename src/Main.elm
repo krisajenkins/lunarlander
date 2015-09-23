@@ -29,9 +29,9 @@ update action model =
                   newPosition = { x = model.position.x + newMomentum.dx
                                 , y = model.position.y + newMomentum.dy }
               in if newPosition.y > canvasSize.height
-                 then ({model | momentum <- initialMomentum
-                              , position <- initialPosition
-                              , score <- model.score - 1}
+                 then ({initialModel | score <- model.score + (if newMomentum.dy < maxImpactSpeed
+                                                               then 1
+                                                               else -1)}
                       ,none)
                  else ({model | momentum <- newMomentum
                               , position <- newPosition}
@@ -46,21 +46,16 @@ update action model =
                  else (model, none)
     _ -> (model, none)
 
-initialPosition : Position
-initialPosition =
-  {x = canvasSize.width * 0.5
-  ,y = canvasSize.height * 0.2}
-
-initialMomentum : Momentum
-initialMomentum = { dx = 0, dy = 0}
+initialModel : Model
+initialModel =
+  {position = {x = canvasSize.width * 0.5
+              ,y = canvasSize.height * 0.2}
+  ,momentum = { dx = 0, dy = 0}
+  ,fuel = 100
+  ,score = 0}
 
 init : (Model, Effects Action)
-init =
-  ({position = initialPosition
-   ,momentum = initialMomentum
-   ,fuel = 100
-   ,score = 0}
-  , none)
+init = (initialModel, none)
 
 ------------------------------------------------------------
 
