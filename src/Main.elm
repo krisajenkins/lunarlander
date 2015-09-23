@@ -7,31 +7,46 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Effects exposing (..)
 import Signal exposing (Address)
-
-type Action
-  = Thrust
-
-type alias Model =
-  {}
+import GameView
+import System exposing (..)
+import Time exposing (fps,Time)
+import Signal exposing ((<~))
 
 update : Action -> Model -> (Model, Effects Action)
 update action model =
-  (model, none)
+  case action of
+    Tick t -> let newMomentum = { dx = model.momentum.dx
+                                , dy = model.momentum.dy + gravity}
+                  newPosition = { x = model.position.x + newMomentum.dx
+                                , y = model.position.y + newMomentum.dy }
+              in ({model | momentum <- newMomentum
+                         , position <- newPosition}
+                 ,none)
+    _ -> (model, none)
 
 init : (Model, Effects Action)
-init = ({}, none)
+init =
+  ({position = {x = canvasSize.width * 0.5
+               ,y = canvasSize.height * 0.2}
+   ,momentum = { dx = 0, dy = 0}
+   ,fuel = 100}
+  , none)
+
+------------------------------------------------------------
 
 rootView : Address Action -> Model -> Html
 rootView channel model =
   div []
       [code [] [text (toString model)]
-      ,h1 [] [text "Lunar Lander"]]
+      ,GameView.root model]
+
+------------------------------------------------------------
 
 app : App Model
 app = StartApp.start {init = init
                      ,view = rootView
                      ,update = update
-                     ,inputs = []}
+                     ,inputs = [Tick <~ fps 25]}
 
 main : Signal Html
 main = app.html
