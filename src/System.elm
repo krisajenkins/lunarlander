@@ -3,19 +3,19 @@ module System where
 import Time exposing (..)
 
 canvasSize : Size
-canvasSize = { width = 400, height = 600}
+canvasSize = { width = 800, height = 600}
 
 gravity : Float
 gravity = 0.3
 
 thrustSize : Float
-thrustSize = 5
+thrustSize = 3.0
 
 maxImpactSpeed : Float
 maxImpactSpeed = 10
 
 type Action
-  = Thrust
+  = Thrust {x : Int, y : Int}
   | TurnLeft
   | TurnRight
   | Tick Time

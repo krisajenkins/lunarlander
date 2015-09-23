@@ -14,13 +14,6 @@ import Time exposing (fps,Time)
 import Signal exposing ((<~))
 import Debug
 
-controls : {x : Int, y : Int} -> Action
-controls arrows =
-  Debug.log "control" <|
-  if arrows.y == 1
-  then Thrust
-  else UnknownControl
-
 update : Action -> Model -> (Model, Effects Action)
 update action model =
   case action of
@@ -37,10 +30,10 @@ update action model =
                               , position <- newPosition}
                       ,none)
 
-    Thrust -> let newMomentum = { dx = model.momentum.dx
-                                , dy = model.momentum.dy - thrustSize}
+    Thrust direction -> let newMomentum = { dx = model.momentum.dx + (toFloat direction.x * thrustSize)
+                                          , dy = model.momentum.dy - (toFloat direction.y * thrustSize)}
               in if model.fuel > 0
-                 then ({model | fuel <- model.fuel - 1
+                 then ({model | fuel <- model.fuel - (abs direction.x + abs direction.y)
                               , momentum <- newMomentum}
                       ,none)
                  else (model, none)
@@ -51,7 +44,7 @@ initialModel =
   {position = {x = canvasSize.width * 0.5
               ,y = canvasSize.height * 0.2}
   ,momentum = { dx = 0, dy = 0}
-  ,fuel = 100
+  ,fuel = 30
   ,score = 0}
 
 init : (Model, Effects Action)
@@ -73,7 +66,7 @@ app = StartApp.start {init = init
                      ,view = rootView
                      ,update = update
                      ,inputs = [Tick <~ fps 25
-                               ,controls <~ wasd]}
+                               ,Thrust <~ wasd]}
 
 main : Signal Html
 main = app.html
