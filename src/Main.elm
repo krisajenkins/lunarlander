@@ -1,6 +1,6 @@
 module Main where
 
-import Keyboard exposing (wasd)
+import Keyboard exposing (wasd,arrows)
 import StartApp exposing (App)
 import Task exposing (Task)
 import Html exposing (..)
@@ -18,7 +18,7 @@ instructions : String
 instructions = """
 Land the ship slowly and safely at the bottom of the screen to earn a point.
 
-Use the W, A, S, D  keys to thrust your ship, but don't run out of fuel!
+Use WASD or the arrow keys to thrust your ship, but don't run out of fuel!
 """
 
 rootView : Address Action -> Model -> Html
@@ -59,6 +59,7 @@ app = StartApp.start {init = (initialModel, none)
                      ,view = rootView
                      ,update = update
                      ,inputs = [Tick <~ fps 25
+                               ,Thrust <~ arrows
                                ,Thrust <~ wasd]}
 
 main : Signal Html
