@@ -44,7 +44,7 @@ update action model =
                   else {model | momentum <- newMomentum
                               , position <- newPosition}
 
-     Thrust direction -> let newMomentum = { dx = model.momentum.dx + (toFloat direction.x * thrustSize)
+     Thrust direction -> let newMomentum = { dx = model.momentum.dx + ((toFloat direction.x * thrustSize) * gravity)
                                            , dy = model.momentum.dy - (toFloat direction.y * thrustSize)}
                in if model.fuel > 0
                   then {model | fuel <- model.fuel - (abs direction.x + abs direction.y)
