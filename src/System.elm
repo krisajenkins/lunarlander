@@ -10,6 +10,10 @@ type alias Size =
   { width : Float
   , height : Float}
 
+type alias PadSize =
+  { left : Float
+  , width : Float}
+
 type alias Position =
   { x : Float
   , y : Float}
@@ -26,6 +30,9 @@ type alias Model =
 
 canvasSize : Size
 canvasSize = { width = 800, height = 600}
+
+landingPad : PadSize
+landingPad = { left = 10, width = 200 }
 
 gravity : Float
 gravity = 0.3

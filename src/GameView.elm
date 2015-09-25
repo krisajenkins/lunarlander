@@ -25,6 +25,15 @@ root model =
             ,stroke "black"
             ,strokeWidth "2"]
             []
+      ,rect [key "pad"
+            ,x (toString landingPad.left)
+            ,y (toString (canvasSize.height - 2))
+            ,width (toString (landingPad.left + landingPad.width))
+            ,height "4"
+            ,fill "red"
+            ,stroke "red"
+            ,strokeWidth "2"]
+            []
       ,text' [x "50"
              ,y "50"
              ,fill "blueviolet"
