@@ -16,7 +16,7 @@ import Signal exposing ((<~))
 
 instructions : String
 instructions = """
-Land the ship slowly and safely at the bottom of the screen to earn a point.
+Land the ship slowly and safely on the landing pad at the bottom of the screen to earn a point.
 
 Use WASD or the arrow keys to thrust your ship, but don't run out of fuel!
 """
@@ -38,13 +38,13 @@ update action model =
                    newPosition = { x = model.position.x + newMomentum.dx
                                  , y = model.position.y + newMomentum.dy }
                in if newPosition.y > canvasSize.height
-                  then {initialModel | score <- model.score + (if newMomentum.dy < maxImpactSpeed
+                  then {initialModel | score <- model.score + (if newMomentum.dy < maxImpactSpeed && (model.position.x > landingPad.left && (model.position.x - landingPad.left) < landingPad.width)
                                                                then 1
                                                                else -1)}
                   else {model | momentum <- newMomentum
                               , position <- newPosition}
 
-     Thrust direction -> let newMomentum = { dx = model.momentum.dx + (toFloat direction.x * thrustSize)
+     Thrust direction -> let newMomentum = { dx = model.momentum.dx + ((toFloat direction.x * thrustSize) * gravity)
                                            , dy = model.momentum.dy - (toFloat direction.y * thrustSize)}
                in if model.fuel > 0
                   then {model | fuel <- model.fuel - (abs direction.x + abs direction.y)
