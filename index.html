@@ -1978,6 +1978,16 @@ Elm.GameView.make = function (_elm) {
                                 ,$Svg$Attributes.stroke("black")
                                 ,$Svg$Attributes.strokeWidth("2")]),
                    _L.fromArray([]))
+                   ,A2($Svg.rect,
+                   _L.fromArray([$Html$Attributes.key("pad")
+                                ,$Svg$Attributes.x($Basics.toString($System.landingPad.left))
+                                ,$Svg$Attributes.y($Basics.toString($System.canvasSize.height - 2))
+                                ,$Svg$Attributes.width($Basics.toString($System.landingPad.left + $System.landingPad.width))
+                                ,$Svg$Attributes.height("4")
+                                ,$Svg$Attributes.fill("red")
+                                ,$Svg$Attributes.stroke("red")
+                                ,$Svg$Attributes.strokeWidth("2")]),
+                   _L.fromArray([]))
                    ,A2($Svg.text$,
                    _L.fromArray([$Svg$Attributes.x("50")
                                 ,$Svg$Attributes.y("50")
@@ -4442,7 +4452,7 @@ Elm.Main.make = function (_elm) {
                 {case "Thrust":
                    return function () {
                         var newMomentum = {_: {}
-                                          ,dx: model.momentum.dx + $Basics.toFloat(action._0.x) * $System.thrustSize
+                                          ,dx: model.momentum.dx + $Basics.toFloat(action._0.x) * $System.thrustSize * $System.gravity
                                           ,dy: model.momentum.dy - $Basics.toFloat(action._0.y) * $System.thrustSize};
                         return _U.cmp(model.fuel,
                         0) > 0 ? _U.replace([["fuel"
@@ -4461,7 +4471,9 @@ Elm.Main.make = function (_elm) {
                         return _U.cmp(newPosition.y,
                         $System.canvasSize.height) > 0 ? _U.replace([["score"
                                                                      ,model.score + (_U.cmp(newMomentum.dy,
-                                                                     $System.maxImpactSpeed) < 0 ? 1 : -1)]],
+                                                                     $System.maxImpactSpeed) < 0 && (_U.cmp(model.position.x,
+                                                                     $System.landingPad.left) > 0 && _U.cmp(model.position.x - $System.landingPad.left,
+                                                                     $System.landingPad.width) < 0) ? 1 : -1)]],
                         $System.initialModel) : _U.replace([["momentum"
                                                             ,newMomentum]
                                                            ,["position"
@@ -4473,7 +4485,7 @@ Elm.Main.make = function (_elm) {
              }()
              ,_1: $Effects.none};
    });
-   var instructions = "\nLand the ship slowly and safely at the bottom of the screen to earn a point.\n\nUse WASD or the arrow keys to thrust your ship, but don\'t run out of fuel!\n";
+   var instructions = "\nLand the ship slowly and safely on the landing pad at the bottom of the screen to earn a point.\n\nUse WASD or the arrow keys to thrust your ship, but don\'t run out of fuel!\n";
    var rootView = F2(function (channel,
    model) {
       return A2($Html.div,
@@ -13805,6 +13817,9 @@ Elm.System.make = function (_elm) {
    var maxImpactSpeed = 10;
    var thrustSize = 3.0;
    var gravity = 0.3;
+   var landingPad = {_: {}
+                    ,left: 10
+                    ,width: 200};
    var canvasSize = {_: {}
                     ,height: 600
                     ,width: 800};
@@ -13833,6 +13848,12 @@ Elm.System.make = function (_elm) {
    b) {
       return {_: {},x: a,y: b};
    });
+   var PadSize = F2(function (a,
+   b) {
+      return {_: {}
+             ,left: a
+             ,width: b};
+   });
    var Size = F2(function (a,b) {
       return {_: {}
              ,height: b
@@ -13849,10 +13870,12 @@ Elm.System.make = function (_elm) {
                         ,Thrust: Thrust
                         ,Tick: Tick
                         ,Size: Size
+                        ,PadSize: PadSize
                         ,Position: Position
                         ,Momentum: Momentum
                         ,Model: Model
                         ,canvasSize: canvasSize
+                        ,landingPad: landingPad
                         ,gravity: gravity
                         ,thrustSize: thrustSize
                         ,maxImpactSpeed: maxImpactSpeed
